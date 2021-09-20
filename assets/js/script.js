@@ -1,6 +1,10 @@
 //Declaring search variables here to work with event listener below
 var searchButton = $("#searchButton");
 const searchParam = $("#searchParam");
+var searchResults = $("#searchResults");
+
+//This will help store and retrieve from local
+var storageKey = 0;
 
 //This will get the current date and append it to the element with currentDay ID. 
 var currentDay = moment();
@@ -8,6 +12,9 @@ const displayDate = moment(currentDay).format("dddd MMMM Do, YYYY");
 
 //API key from https://openweathermap.org/
 const apiKey = "51f15739d371e367d2088fc510f7336f";
+
+//This is defined below. If the user returns to the page then they should see their previous search terms.
+searchHistoryDisplay();
 
 //This function will call the API and get the current weather results. Then it will post it to the page.
 function currentWeatherResults(citySearch) {
@@ -100,7 +107,7 @@ function fiveDayResults(citySearch) {
             console.log(forecastDay);
 
             for (var i = 0; i < 5; i++) {
-                
+
                 forecastDay.setDate(today.getDate() + i);
 
                 fiveDayForcast.append("<div class=dayResult>" +
@@ -115,11 +122,24 @@ function fiveDayResults(citySearch) {
         });
 }
 
-searchButton.click(function() {
+searchButton.click(function () {
     var citySearch = searchParam.val();
     fiveDayResults(citySearch);
     currentWeatherResults(citySearch);
+    localStorage.setItem(storageKey, citySearch);
+    //every new search will have a new storage key id
+    storageKey = storageKey + 1;
+    searchHistoryDisplay();
 })
 
-//fiveDayResults(citySearch);
-//currentWeatherResults(citySearch);
+//This function will return all search results from local and append it to the div with the searchResults class.
+function searchHistoryDisplay() {
+    searchResults.html("");
+
+    for (var i = localStorage.length - 1; i >= 0; i--) {
+        var previousSearch = localStorage.getItem(i);
+        searchResults.append("<li>" + previousSearch + "</li>");
+    }
+    //I need this line because I want to properly add to my existing list.
+    storageKey = localStorage.length;
+}
