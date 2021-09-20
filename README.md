@@ -12,7 +12,7 @@
 * Bootstrap
 
 ## Website
-https://nasirahmed422.github.io/
+https://nasirahmed422.github.io/weather-dashboard/
 
 ## Screenshots
 
