@@ -1,8 +1,52 @@
-.searchContainer {
-  border: 15px solid green;
+body {
+  font-family: "Times New Roman", Times, serif;
+}
+
+h1 {
+  text-align: center;
+  background-color: midnightblue;
+  opacity: 0.8;
+  color: whitesmoke;
+  padding: 30px;
+}
+
+.searchContainer, .apiResults {
+  border: 15px solid grey;
   padding: 50px;
 }
-.apiResults {
-  border: 15px solid green;
-  padding: 50px;
+
+h3 {
+  font-weight: bold;
+  text-align: center;
+  border: 5px solid black;
+  padding: 10px;
+}
+
+h6 {
+  text-align: center;
+  padding: 10px;
+  font-style: italic;
+  color: white;
+  font-weight: bold;
+}
+
+.searchBox,.fiveDay {
+  justify-content: space-around;
+}
+
+.currentConditions, .dayResult {
+  text-align: center;
+  background-color: midnightblue;
+  color: whitesmoke;
+  padding: 15px;
+}
+
+#searchResults {
+  padding: 2px;
+}
+
+li {
+  list-style-type: none;
+  padding: 10px;
+  border: 0.5px solid black;
 }

@@ -2,6 +2,7 @@
 var searchButton = $("#searchButton");
 const searchParam = $("#searchParam");
 var searchResults = $("#searchResults");
+var clearResults = $("#clearSearch");
 
 //This will help store and retrieve from local
 var storageKey = 0;
@@ -47,9 +48,9 @@ function currentWeatherResults(citySearch) {
             //Here we are adding data to our DOM elements.
             cityNameEl.textContent = cityNameResult + " (" + displayDate + ")";
             currentWeatherIcon(cityLatResult, cityLonResult, weatherIconEl);
-            cityTempEl.textContent = "Temperature: " + cityTempResult;
-            cityWindSpeedEl.textContent = "Wind: " + cityWindSpeedResult;
-            cityHumidityEl.textContent = "Humidity: " + cityHumidityResults;
+            cityTempEl.textContent = "Temperature: " + cityTempResult + "°";
+            cityWindSpeedEl.textContent = "Wind: " + cityWindSpeedResult + " MPH";
+            cityHumidityEl.textContent = "Humidity: " + cityHumidityResults + "%";
             currentUVResults(cityLatResult, cityLonResult, cityUVEl);
             currentConditionsEl.append(cityNameEl);
             currentConditionsEl.append(weatherIconEl);
@@ -113,7 +114,7 @@ function fiveDayResults(citySearch) {
                 fiveDayForcast.append("<div class=dayResult>" +
                     "<p>" + forecastDay.toDateString() + "</p>" +
                     `<img src="https://openweathermap.org/img/wn/${response.list[i].weather[0].icon}@2x.png">` +
-                    "<p>" + "Temp: " + response.list[i].main.temp + "</p>" +
+                    "<p>" + "Temp: " + response.list[i].main.temp + "°" + " </p>" +
                     "<p>" + "Wind : " + response.list[i].wind.speed + " MPH" + "</p>" +
                     "<p>" + "Humidity: " + response.list[i].main.humidity + "%" + "</p>") +
                     "<div>";
@@ -143,3 +144,10 @@ function searchHistoryDisplay() {
     //I need this line because I want to properly add to my existing list.
     storageKey = localStorage.length;
 }
+
+// If the previous searches get too long they can now be cleared.
+clearResults.click(function(){
+    localStorage.clear();
+    storageKey = 0;
+    searchHistoryDisplay();
+})
