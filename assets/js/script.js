@@ -1,10 +1,13 @@
+//Declaring search variables here to work with event listener below
+var searchButton = $("#searchButton");
+const searchParam = $("#searchParam");
+
 //This will get the current date and append it to the element with currentDay ID. 
 var currentDay = moment();
 const displayDate = moment(currentDay).format("dddd MMMM Do, YYYY");
 
 //API key from https://openweathermap.org/
 const apiKey = "51f15739d371e367d2088fc510f7336f";
-var citySearch = "New York City";
 
 //This function will call the API and get the current weather results. Then it will post it to the page.
 function currentWeatherResults(citySearch) {
@@ -111,5 +114,12 @@ function fiveDayResults(citySearch) {
 
         });
 }
-fiveDayResults(citySearch);
-currentWeatherResults(citySearch);
+
+searchButton.click(function() {
+    var citySearch = searchParam.val();
+    fiveDayResults(citySearch);
+    currentWeatherResults(citySearch);
+})
+
+//fiveDayResults(citySearch);
+//currentWeatherResults(citySearch);
