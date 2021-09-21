@@ -8,7 +8,7 @@ var recentSearch = $(".recentSearch");
 //This will help store and retrieve from local
 var storageKey = 0;
 
-//This will get the current date and append it to the element with currentDay ID. 
+//This will get the current date. 
 var currentDay = moment();
 const displayDate = moment(currentDay).format("dddd MMMM Do, YYYY");
 
@@ -59,10 +59,9 @@ function currentWeatherResults(citySearch) {
             currentConditionsEl.append(cityWindSpeedEl);
             currentConditionsEl.append(cityHumidityEl);
             currentConditionsEl.append(cityUVEl);
-
         });
-
 }
+
 //These two functions were made separate to handle the UVI and Weather Icons because they need a Lat/Long.
 //Lat/Long was already returned from currentWeatherResults()
 function currentUVResults(latt, long, element) {
@@ -74,6 +73,7 @@ function currentUVResults(latt, long, element) {
         .then(function (response) {
             var cityUVIResult = response.current.uvi;
             element.textContent = "UV Index: " + cityUVIResult;
+            //This section we are changing the color of the UV based off its level. I googled the numbers but they can change.
             if (cityUVIResult >= 8 ) {
                 element.setAttribute("class", "badge badge-danger");
             }
@@ -100,6 +100,7 @@ function currentWeatherIcon(latt, long, element) {
         });
 }
 
+//This function gets the five day results and appends it to the page.
 function fiveDayResults(citySearch) {
     var fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast?cnt=5&q=" + citySearch + "&units=imperial&appid=" + apiKey;
 
@@ -114,12 +115,8 @@ function fiveDayResults(citySearch) {
             const today = new Date();
             const forecastDay = new Date();
 
-            console.log(forecastDay);
-
             for (var i = 0; i < 5; i++) {
-
                 forecastDay.setDate(today.getDate() + i);
-
                 fiveDayForcast.append("<div class=dayResult>" +
                     "<p>" + forecastDay.toDateString() + "</p>" +
                     `<img src="https://openweathermap.org/img/wn/${response.list[i].weather[0].icon}@2x.png">` +
@@ -128,24 +125,28 @@ function fiveDayResults(citySearch) {
                     "<p>" + "Humidity: " + response.list[i].main.humidity + "%" + "</p>") +
                     "<div>";
             }
-
         });
 }
 
-searchButton.click(function () {
-    var citySearch = searchParam.val();
+//This was added to make the code more DRY. It basically gets the Weather Data and updates local storage.
+function loadWeather(citySearch){
     fiveDayResults(citySearch);
     currentWeatherResults(citySearch);
     localStorage.setItem(storageKey, citySearch);
     //every new search will have a new storage key id
     storageKey = storageKey + 1;
     searchHistoryDisplay();
+}
+
+//This function will call the above api function the moment Search is clicked.
+searchButton.click(function () {
+    var citySearch = searchParam.val();
+    loadWeather(citySearch);
 })
 
 //This function will return all search results from local and append it to the div with the searchResults class.
 function searchHistoryDisplay() {
     searchResults.html("");
-
     for (var i = localStorage.length - 1; i >= 0; i--) {
         var previousSearch = localStorage.getItem(i);
         searchResults.append("<li class=recentSearch>" + previousSearch + "</li>");
@@ -161,12 +162,8 @@ clearResults.click(function(){
     searchHistoryDisplay();
 })
 
-/*recentSearch.click(function () {
-    var citySearch = recentSearch.val();
-    fiveDayResults(citySearch);
-    currentWeatherResults(citySearch);
-    localStorage.setItem(storageKey, citySearch);
-    //every new search will have a new storage key id
-    storageKey = storageKey + 1;
-    searchHistoryDisplay();
-})*/
+//Clicking here would display previous search results
+$("#searchResults").on("click",".recentSearch",function () {
+    var citySearch = this.textContent;
+    loadWeather(citySearch);
+})
