@@ -96,6 +96,7 @@ function currentWeatherIcon(latt, long, element) {
 
             var weatherIconCode = response.current.weather[0].icon;
             var imgURL = "https://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
+            element.setAttribute("src", imgURL);;
         });
 }
 
