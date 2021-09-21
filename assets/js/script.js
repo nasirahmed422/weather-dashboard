@@ -3,6 +3,7 @@ var searchButton = $("#searchButton");
 const searchParam = $("#searchParam");
 var searchResults = $("#searchResults");
 var clearResults = $("#clearSearch");
+var recentSearch = $(".recentSearch");
 
 //This will help store and retrieve from local
 var storageKey = 0;
@@ -44,7 +45,7 @@ function currentWeatherResults(citySearch) {
             var cityWindSpeedEl = document.createElement("p");
             var cityHumidityEl = document.createElement("p");
             var cityUVEl = document.createElement("p");
-
+            
             //Here we are adding data to our DOM elements.
             cityNameEl.textContent = cityNameResult + " (" + displayDate + ")";
             currentWeatherIcon(cityLatResult, cityLonResult, weatherIconEl);
@@ -61,7 +62,6 @@ function currentWeatherResults(citySearch) {
 
         });
 
-
 }
 //These two functions were made separate to handle the UVI and Weather Icons because they need a Lat/Long.
 //Lat/Long was already returned from currentWeatherResults()
@@ -74,6 +74,15 @@ function currentUVResults(latt, long, element) {
         .then(function (response) {
             var cityUVIResult = response.current.uvi;
             element.textContent = "UV Index: " + cityUVIResult;
+            if (cityUVIResult >= 8 ) {
+                element.setAttribute("class", "badge badge-danger");
+            }
+            else if (8 > cityUVIResult >= 6) {
+                element.setAttribute("class", "badge badge-warning");
+            }
+            else {
+                element.setAttribute("class", "badge badge-success");
+            }
         });
 }
 
@@ -87,7 +96,6 @@ function currentWeatherIcon(latt, long, element) {
 
             var weatherIconCode = response.current.weather[0].icon;
             var imgURL = "https://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
-            element.setAttribute("src", imgURL);;
         });
 }
 
@@ -139,7 +147,7 @@ function searchHistoryDisplay() {
 
     for (var i = localStorage.length - 1; i >= 0; i--) {
         var previousSearch = localStorage.getItem(i);
-        searchResults.append("<li>" + previousSearch + "</li>");
+        searchResults.append("<li class=recentSearch>" + previousSearch + "</li>");
     }
     //I need this line because I want to properly add to my existing list.
     storageKey = localStorage.length;
@@ -151,3 +159,13 @@ clearResults.click(function(){
     storageKey = 0;
     searchHistoryDisplay();
 })
+
+/*recentSearch.click(function () {
+    var citySearch = recentSearch.val();
+    fiveDayResults(citySearch);
+    currentWeatherResults(citySearch);
+    localStorage.setItem(storageKey, citySearch);
+    //every new search will have a new storage key id
+    storageKey = storageKey + 1;
+    searchHistoryDisplay();
+})*/
